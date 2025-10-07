@@ -1,0 +1,150 @@
+testbed:
+  name: NetworkAutomation3
+
+devices:
+  UbuntuServer:
+    os: linux
+    type: linux
+    credentials:
+      default:
+        username: osboxes
+        password: osboxes.org
+    connections:
+      ssh:
+        class: ssh_con.SshConnection
+        protocol: ssh
+        ip: 192.168.200.254
+        port: 22
+
+  IOU1:
+    os: iosxe
+    type: iosxe
+    credentials:
+      default:
+        username: admin
+        password: Cisco@135
+      enable:
+        password:  Cisco!246
+    connections:
+      unicon:
+        protocol: ssh
+        ip: 192.168.200.1
+        port: 22
+
+  Router:
+    os: iosxe
+    type: iosxe
+    credentials:
+      default:
+        username: admin
+        password: Cisco@135
+      enable:
+        password: Cisco!246
+    connections:
+      unicon:
+        protocol: ssh
+        ip: 192.168.200.2
+        port: 22
+
+  CSR:
+    os: iosxe
+    type: iosxe
+    credentials:
+      default:
+        username: admin
+        password: Cisco@135
+      enable:
+        password: Cisco!246
+    connections:
+      unicon:
+        protocol: ssh
+        ip: 192.168.200.3
+        port: 22
+
+  FTD:
+    os: ftd
+    type: ftd
+    credentials:
+      default:
+        username: admin
+        password: Cisco@135
+      enable:
+        password: Cisco!246
+    connections:
+      unicon:
+        protocol: ssh
+        ip: 192.168.200.4
+        port: 22
+
+topology:
+
+  UbuntuServer:
+    interfaces:
+      ens4:
+        type: ethernet
+        link: management
+        ipv4: 192.168.200.254/24
+
+  IOU1:
+    interfaces:
+      Ethernet0/0:
+        alias: initial
+        type: ethernet
+        link: management
+        ipv4: 192.168.200.1/24
+      Ethernet0/1:
+        type: ethernet
+        link: guest1
+        ipv4: 192.168.10.1/24
+      Ethernet0/2:
+        type: ethernet
+        link: iou_iosv
+        ipv4: 192.168.20.1/24
+
+  Router:
+    interfaces:
+      GigabitEthernet0/0:
+        type: ethernet
+        alias: initial
+        link: management
+        ipv4: 192.168.200.2/24
+      GigabitEthernet0/1:
+        type: ethernet
+        link: iou_iosv
+        ipv4: 192.168.20.2/24
+      GigabitEthernet0/2:
+        type: ethernet
+        link: iosv_csr
+        ipv4: 192.168.30.1/24
+
+  CSR:
+    interfaces:
+      GigabitEthernet1:
+        type: ethernet
+        alias: initial
+        link: management
+        ipv4: 192.168.200.3/24
+      GigabitEthernet2:
+        type: ethernet
+        link: iosv_csr
+        ipv4: 192.168.30.2/24
+      GigabitEthernet3:
+        type: ethernet
+        link: csr_ftd
+        ipv4: 192.168.40.1/24
+
+  FTD:
+    interfaces:
+      Management1/1:
+        type: ethernet
+        alias: initial
+        link: management
+        ipv4: 192.168.200.4/24
+      Ethernet1/1:
+        type: ethernet
+        link: csr_ftd
+        ipv4: 192.168.40.2/24
+      Ethernet1/2:
+        type: ethernet
+        link: ftd_ep2
+        ipv4: 192.168.50.1/24

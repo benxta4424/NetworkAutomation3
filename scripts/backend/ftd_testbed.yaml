@@ -1,0 +1,43 @@
+devices:
+  FTD:
+    os: ftd
+    type: ftd
+    custom:
+      domain: example.com
+    credentials:
+      default:
+        username: admin
+        password: Cisco@135
+      enable:
+        password: Cisco!246
+    connections:
+      telnet:
+        class: telnet_con.TelnetConnection
+        protocol: telnet
+        ip:  92.81.55.146
+        port: 5011
+      swagger:
+        class: swagger_con.SwaggerConnector
+        protocol: https
+        ip: 192.168.200.4
+        port: 443
+
+
+topology:
+  FTD:
+    interfaces:
+      Management1/1:
+        type: ethernet
+        alias: initial
+        link: management
+        ipv4: 192.168.200.4/24
+      GigabitEthernet0/0:
+        type: ethernet
+        alias: csr_ftd
+        link: csr_ftd
+        ipv4: 192.168.40.2/24
+      GigabitEthernet0/1:
+        type: ethernet
+        alias: ftd_ep2
+        link: ftd_ep2
+        ipv4: 192.168.50.1/24

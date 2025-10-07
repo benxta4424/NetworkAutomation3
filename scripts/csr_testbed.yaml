@@ -1,0 +1,45 @@
+devices:
+  CSR:
+    os: iosxe
+    type: router
+    custom:
+      domain: example.com
+    credentials:
+      default:
+        username: admin
+        password: Cisco@135
+      enable:
+        password: Cisco!246
+    connections:
+      telnet:
+        class: telnet_con.TelnetConnection
+        protocol: telnet
+        ip:  92.81.55.146
+        port: 5118
+      ssh:
+        class: ssh_con.SshConnection
+        protocol: ssh
+        ip: 192.168.200.3
+        port: 22
+      rest:
+        class: rest_con.RESTConnector
+        protocol: https
+        ip: 192.168.200.3
+        port: 443
+
+topology:
+  CSR:
+    interfaces:
+      GigabitEthernet1:
+        type: ethernet
+        alias: initial
+        link: management
+        ipv4: 192.168.200.3/24
+      GigabitEthernet2:
+        type: ethernet
+        link: iosv_csr
+        ipv4: 192.168.30.2/24
+      GigabitEthernet3:
+        type: ethernet
+        link: csr_ftd
+        ipv4: 192.168.50.1/24

@@ -1,0 +1,163 @@
+testbed:
+  name: NetworkAutomation3
+
+
+devices:
+  UbuntuServer:
+    os: linux
+    type: linux
+    connections:
+      ssh:
+        class: ssh_con.SshConnection
+        protocol: ssh
+        ip: 192.168.200.1
+        port: 22
+        credentials:
+          login:
+            username: osboxes
+            password: osboxes.org
+
+  IOU1:
+    os: ios
+    type: router
+    connections:
+      telnet:
+        class: tel_class
+        protocol: telnet.TelnetConnection
+        ip: 192.168.10.100
+        port: 5117
+        credentials:
+          login:
+            username: admin
+            password: Cisco!23
+      ssh:
+        class: ssh_con.SshConnection
+        protocol: ssh
+        ip: 192.168.200.1
+        port: 22
+        credentials:
+          login:
+            username: admin
+            password: Cisco@123
+
+  Router:
+    os: ios
+    type: router
+    custom:
+      hostname: Router
+    credentials:
+      enable:
+        password: Cisco!2345
+    connections:
+      telnet:
+        class: telnet.TelnetConnection
+        protocol: telnet
+        ip: 192.168.10.100
+        port: 5082
+        credentials:
+          login:
+            username: admin
+            password: Cisco!23
+      ssh:
+        class: ssh_con.SshConnection
+        protocol: ssh
+        ip: 192.168.103.2 #ip IOU1
+        port: 22
+        credentials:
+          login:
+            username: admin
+            password: Cisco!23
+
+  CSR:
+    os: ios
+    type: router
+    custom:
+      hostname: Router
+    credentials:
+      enable:
+        password: Cisco!2345
+    connections:
+      telnet:
+        class: telnet.TelnetConnection
+        protocol: telnet
+        ip: 192.168.10.100
+        port: 5084
+        credentials:
+          login:
+            username: admin
+            password: Cisco@135
+      ssh:
+        class: ssh_con.SshConnection
+        protocol: ssh
+        ip: 192.168.200.4
+        port: 22
+        credentials:
+          login:
+            username: admin
+            password: Cisco@135
+      rest:
+        class: lib.connectors.rest_con.RESTConnector
+        protocol: ssh
+        ip: 192.168.200.4
+        port: 443
+        credentials:
+          login:
+            username: admin
+            password: Cisco@135
+
+topology:
+
+  UbuntuServer:
+    interfaces:
+      ens4:
+        type: ethernet
+        link: management
+        ipv4: 192.168.200.254/24
+
+  IOU1:
+    interfaces:
+      Ethernet0/0:
+        alias: initial
+        type: ethernet
+        link: management
+        ipv4: 192.168.200.1/24
+      Ethernet0/1:
+        type: ethernet
+        link: guest1
+        ipv4: 192.168.201.1/24
+      Ethernet0/2:
+        type: ethernet
+        link: iou_iosv
+        ipv4: 192.168.202.1/24
+
+  Router:
+    interfaces:
+      GigabitEthernet0/0:
+        type: ethernet
+        alias: initial
+        link: management
+        ipv4: 192.168.200.2/24
+      GigabitEthernet0/1:
+        type: ethernet
+        link: iou_iosv
+        ipv4: 192.168.202.2/24
+      GigabitEthernet0/2:
+        type: ethernet
+        link: iosv_csr
+        ipv4: 192.168.203.2/24
+
+  CSR:
+    interfaces:
+      GigabitEthernet1:
+        type: ethernet
+        alias: initial
+        link: management
+        ipv4: 192.168.200.4/24
+      GigabitEthernet2:
+        type: ethernet
+        link: iosv_csr
+        ipv4: 192.168.203.4/24
+      GigabitEthernet3:
+        type: ethernet
+        link: csr_ftd
+        ipv4: 192.168.204.4/24
